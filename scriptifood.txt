@@ -1,0 +1,210 @@
+-- Gerado por Oracle SQL Developer Data Modeler 21.4.2.059.0838
+--   em:        2022-06-08 22:27:06 BRT
+--   site:      Oracle Database 11g
+--   tipo:      Oracle Database 11g
+
+
+
+-- predefined type, no DDL - MDSYS.SDO_GEOMETRY
+
+-- predefined type, no DDL - XMLTYPE
+
+CREATE TABLE categoria (
+    categoria_id     NUMBER NOT NULL,
+    restaurante      CHAR(1),
+    farmacia         CHAR(1),
+    bebidas          CHAR(1),
+    pets             CHAR(1),
+    estabe_estabe_id NUMBER NOT NULL
+);
+
+CREATE UNIQUE INDEX categoria__idx ON
+    categoria (
+        estabe_estabe_id
+    ASC );
+
+ALTER TABLE categoria ADD CONSTRAINT categoria_pk PRIMARY KEY ( categoria_id );
+
+CREATE TABLE cliente (
+    cliente_id    NUMBER NOT NULL,
+    nome_completo VARCHAR2(255),
+    nr_telefone   NUMBER,
+    cpf           NUMBER,
+    email         VARCHAR2(255)
+);
+
+ALTER TABLE cliente ADD CONSTRAINT cliente_pk PRIMARY KEY ( cliente_id );
+
+CREATE TABLE delivery (
+    entregador_entregador_id NUMBER NOT NULL,
+    pedido_pedido_id         NUMBER NOT NULL
+);
+
+CREATE UNIQUE INDEX delivery__idx ON
+    delivery (
+        pedido_pedido_id
+    ASC );
+
+ALTER TABLE delivery ADD CONSTRAINT delivery_pk PRIMARY KEY ( entregador_entregador_id,
+                                                              pedido_pedido_id );
+
+CREATE TABLE endereco (
+    endereco_id              NUMBER NOT NULL,
+    rua                      VARCHAR2(255),
+    bairro                   VARCHAR2(255),
+    cep                      NUMBER,
+    numero                   NUMBER,
+    complemento              VARCHAR2(255),
+    estado                   VARCHAR2(255),
+    cidade                   VARCHAR2(255),
+    entregador_entregador_id NUMBER NOT NULL,
+    pedido_pedido_id         NUMBER NOT NULL,
+    estabe_estabe_id         NUMBER NOT NULL
+);
+
+CREATE UNIQUE INDEX endereco__idx ON
+    endereco (
+        entregador_entregador_id
+    ASC );
+
+CREATE UNIQUE INDEX endereco__idxv1 ON
+    endereco (
+        pedido_pedido_id
+    ASC );
+
+CREATE UNIQUE INDEX endereco__idxv2 ON
+    endereco (
+        estabe_estabe_id
+    ASC );
+
+ALTER TABLE endereco ADD CONSTRAINT endereco_pk PRIMARY KEY ( endereco_id );
+
+CREATE TABLE entregador (
+    entregador_id NUMBER NOT NULL,
+    nome_completo VARCHAR2(255),
+    nr_telefone   NUMBER,
+    cpf           VARCHAR2(255),
+    cnh           VARCHAR2(255),
+    data_cadastro DATE,
+    descricao     VARCHAR2(255)
+);
+
+ALTER TABLE entregador ADD CONSTRAINT entregador_pk PRIMARY KEY ( entregador_id );
+
+CREATE TABLE estabelecimento (
+    estabe_id    NUMBER NOT NULL,
+    razao_social VARCHAR2(255),
+    nr_telefone  NUMBER,
+    cnpj         NUMBER
+);
+
+ALTER TABLE estabelecimento ADD CONSTRAINT estabelecimento_pk PRIMARY KEY ( estabe_id );
+
+CREATE TABLE locomocao (
+    locomocao_id             NUMBER NOT NULL,
+    moto                     CHAR(1),
+    bicicleta                CHAR(1),
+    carro                    CHAR(1),
+    entregador_entregador_id NUMBER NOT NULL
+);
+
+CREATE UNIQUE INDEX locomocao__idx ON
+    locomocao (
+        entregador_entregador_id
+    ASC );
+
+ALTER TABLE locomocao ADD CONSTRAINT locomocao_pk PRIMARY KEY ( locomocao_id );
+
+CREATE TABLE pedido (
+    pedido_id          NUMBER NOT NULL,
+    cliente_cliente_id NUMBER NOT NULL,
+    cod_pedido         VARCHAR2(255),
+    valor              NUMBER,
+    forma_pagamento    VARCHAR2(255),
+    entrega_obs        VARCHAR2(255),
+    avaliacao          VARCHAR2(255),
+    estabe_estabe_id   NUMBER NOT NULL
+);
+
+ALTER TABLE pedido ADD CONSTRAINT pedido_pk PRIMARY KEY ( pedido_id );
+
+ALTER TABLE categoria
+    ADD CONSTRAINT categoria_estabelecimento_fk FOREIGN KEY ( estabe_estabe_id )
+        REFERENCES estabelecimento ( estabe_id );
+
+ALTER TABLE delivery
+    ADD CONSTRAINT delivery_entregador_fk FOREIGN KEY ( entregador_entregador_id )
+        REFERENCES entregador ( entregador_id );
+
+ALTER TABLE delivery
+    ADD CONSTRAINT delivery_pedido_fk FOREIGN KEY ( pedido_pedido_id )
+        REFERENCES pedido ( pedido_id );
+
+ALTER TABLE endereco
+    ADD CONSTRAINT endereco_entregador_fk FOREIGN KEY ( entregador_entregador_id )
+        REFERENCES entregador ( entregador_id );
+
+ALTER TABLE endereco
+    ADD CONSTRAINT endereco_estabelecimento_fk FOREIGN KEY ( estabe_estabe_id )
+        REFERENCES estabelecimento ( estabe_id );
+
+ALTER TABLE endereco
+    ADD CONSTRAINT endereco_pedido_fk FOREIGN KEY ( pedido_pedido_id )
+        REFERENCES pedido ( pedido_id );
+
+ALTER TABLE locomocao
+    ADD CONSTRAINT locomocao_entregador_fk FOREIGN KEY ( entregador_entregador_id )
+        REFERENCES entregador ( entregador_id );
+
+ALTER TABLE pedido
+    ADD CONSTRAINT pedido_cliente_fk FOREIGN KEY ( cliente_cliente_id )
+        REFERENCES cliente ( cliente_id );
+
+ALTER TABLE pedido
+    ADD CONSTRAINT pedido_estabelecimento_fk FOREIGN KEY ( estabe_estabe_id )
+        REFERENCES estabelecimento ( estabe_id );
+
+
+
+-- Relatório do Resumo do Oracle SQL Developer Data Modeler: 
+-- 
+-- CREATE TABLE                             8
+-- CREATE INDEX                             6
+-- ALTER TABLE                             17
+-- CREATE VIEW                              0
+-- ALTER VIEW                               0
+-- CREATE PACKAGE                           0
+-- CREATE PACKAGE BODY                      0
+-- CREATE PROCEDURE                         0
+-- CREATE FUNCTION                          0
+-- CREATE TRIGGER                           0
+-- ALTER TRIGGER                            0
+-- CREATE COLLECTION TYPE                   0
+-- CREATE STRUCTURED TYPE                   0
+-- CREATE STRUCTURED TYPE BODY              0
+-- CREATE CLUSTER                           0
+-- CREATE CONTEXT                           0
+-- CREATE DATABASE                          0
+-- CREATE DIMENSION                         0
+-- CREATE DIRECTORY                         0
+-- CREATE DISK GROUP                        0
+-- CREATE ROLE                              0
+-- CREATE ROLLBACK SEGMENT                  0
+-- CREATE SEQUENCE                          0
+-- CREATE MATERIALIZED VIEW                 0
+-- CREATE MATERIALIZED VIEW LOG             0
+-- CREATE SYNONYM                           0
+-- CREATE TABLESPACE                        0
+-- CREATE USER                              0
+-- 
+-- DROP TABLESPACE                          0
+-- DROP DATABASE                            0
+-- 
+-- REDACTION POLICY                         0
+-- 
+-- ORDS DROP SCHEMA                         0
+-- ORDS ENABLE SCHEMA                       0
+-- ORDS ENABLE OBJECT                       0
+-- 
+-- ERRORS                                   0
+-- WARNINGS                                 0
